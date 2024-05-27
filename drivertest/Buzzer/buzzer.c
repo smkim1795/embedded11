@@ -43,25 +43,6 @@ int findBuzzerSysPath(char *gBuzzerBaseSysDir) //버저 경로 찾기
    return ifNotFound;
 }
 
-void buzzerEnable(int bEnable)
-{
-   char path[200];
-   sprintf(path,"%s%s",gBuzzerBaseSysDir,BUZZER_ENABLE_NAME);
-   int fd=open(path,O_WRONLY);
-   if ( bEnable) write(fd, &"1", 1);
-   else write(fd, &"0", 1);
-   close(fd);
-}
-
-void setFrequency(int frequency)
-{
-   char path[200];
-   sprintf(path,"%s%s",gBuzzerBaseSysDir,BUZZER_FREQUENCY_NAME);
-   int fd=open(path,O_WRONLY);
-   dprintf(fd, "%d", frequency);
-   close(fd);
-}
-
 int buzzerInit(void) //+Buzzerenable, setFrequency (sprintf)
 {
    if(findBuzzerSysPath(gBuzzerBaseSysDir) == 1)
@@ -73,8 +54,8 @@ int buzzerInit(void) //+Buzzerenable, setFrequency (sprintf)
    sprintf(path_en,"%s%s",gBuzzerBaseSysDir,BUZZER_ENABLE_NAME);
    sprintf(path_fre,"%s%s",gBuzzerBaseSysDir,BUZZER_FREQUENCY_NAME);
 
-   fd_en=open(path,O_WRONLY);
-   fd_fre=open(path,O_WRONLY);
+   fd_en=open(path_en,O_WRONLY);
+   fd_fre=open(path_fre,O_WRONLY);
 
    return 1;
 }
