@@ -165,62 +165,62 @@ int BGM_GAME1(void) //도미솔 도미솔 라라라 솔 파파파 미미미 레�
 
 int BGM_GAME2(void) //솔미미 파레레 도레미파 솔솔솔 솔미미미 파레레 도미솔솔 미미미(같은그림찾기 전용 BGM))
 {
-    buzzerPlaySong(musicScale[1]);
+    buzzerPlaySong(musicScale[4]);
+    usleep(150000);
+    buzzerPlaySong(musicScale[2]);
+    usleep(150000);
+    buzzerPlaySong(musicScale[2]);
+    usleep(300000);//솔미미
+    buzzerPlaySong(musicScale[3]);
     usleep(150000);
     buzzerPlaySong(musicScale[1]);
     usleep(150000);
     buzzerPlaySong(musicScale[1]);
-    usleep(150000);//솔미미
-    buzzerPlaySong(musicScale[1]);
-    usleep(150000);
-    buzzerPlaySong(musicScale[1]);
-    usleep(150000);
-    buzzerPlaySong(musicScale[1]);
-    usleep(150000);//파레레
+    usleep(300000);//파레레
 
-    buzzerPlaySong(musicScale[1]);
+    buzzerPlaySong(musicScale[0]);
     usleep(150000);
     buzzerPlaySong(musicScale[1]);
     usleep(150000);
-    buzzerPlaySong(musicScale[1]);
+    buzzerPlaySong(musicScale[2]);
     usleep(150000);
-    buzzerPlaySong(musicScale[1]);
+    buzzerPlaySong(musicScale[3]);
     usleep(150000);
-    buzzerPlaySong(musicScale[1]);
+    buzzerPlaySong(musicScale[4]);
     usleep(150000);
-    buzzerPlaySong(musicScale[1]);
+    buzzerPlaySong(musicScale[4]);
     usleep(150000);
-    buzzerPlaySong(musicScale[7]);
+    buzzerPlaySong(musicScale[4]);
     usleep(300000);//도레미파솔솔솔
 
-    buzzerPlaySong(musicScale[1]);
-    usleep(150000);
-    buzzerPlaySong(musicScale[1]);
-    usleep(150000);
-    buzzerPlaySong(musicScale[1]);
-    usleep(150000);
-    buzzerPlaySong(musicScale[1]);
-    usleep(150000);
-    buzzerPlaySong(musicScale[1]);
-    usleep(150000);
-    buzzerPlaySong(musicScale[1]);
-    usleep(150000);
     buzzerPlaySong(musicScale[4]);
+    usleep(150000);
+    buzzerPlaySong(musicScale[2]);
+    usleep(150000);
+    buzzerPlaySong(musicScale[2]);
+    usleep(150000);
+    buzzerPlaySong(musicScale[2]);
+    usleep(150000);
+    buzzerPlaySong(musicScale[3]);
+    usleep(150000);
+    buzzerPlaySong(musicScale[1]);
+    usleep(150000);
+    buzzerPlaySong(musicScale[1]);
     usleep(300000);//솔미미미 파레레
 
-    buzzerPlaySong(musicScale[1]);
+    buzzerPlaySong(musicScale[0]);
     usleep(150000);
-    buzzerPlaySong(musicScale[1]);
-    usleep(150000);
-    buzzerPlaySong(musicScale[1]);
-    usleep(150000);
-    buzzerPlaySong(musicScale[1]);
-    usleep(150000);
-    buzzerPlaySong(musicScale[1]);
-    usleep(150000);
-    buzzerPlaySong(musicScale[1]);
+    buzzerPlaySong(musicScale[2]);
     usleep(150000);
     buzzerPlaySong(musicScale[4]);
+    usleep(150000);
+    buzzerPlaySong(musicScale[4]);
+    usleep(150000);
+    buzzerPlaySong(musicScale[2]);
+    usleep(150000);
+    buzzerPlaySong(musicScale[2]);
+    usleep(150000);
+    buzzerPlaySong(musicScale[2]);
     usleep(300000);//도미솔솔 미미미
 
     buzzerStopSong(); // 부저 끄기
