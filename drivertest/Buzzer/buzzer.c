@@ -20,7 +20,7 @@ static const int musicScale[MAX_SCALE_STEP] =
 };
 
 static int fd_en, fd_fre;
-static char path_en[200] = {0,}, path_freq[200] = {0,};
+static char path_en[200] = {0,}, path_fre[200] = {0,};
 
 int findBuzzerSysPath(char *gBuzzerBaseSysDir) //버저 경로 찾기
 {
