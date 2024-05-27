@@ -6,28 +6,20 @@
 #include <dirent.h>
 #include "buzzer.h"
 
-int main(int argc , char **argv)
+int main(void)
 {
-   int freIndex;
-
-   if (argc < 2 || findBuzzerSysPath() )
-   {
-      printf("Error!\n");
-      doHelp();
-      return 1;
-   }
-
-   freIndex = atoi(argv[1]);
-   printf("freIndex :%d \n",freIndex);
    buzzerInit();
 
-   if ( freIndex == 0)
-   {
-      buzzerStopSong();
-   }
-   else
-   {
-      buzzerPlaySong(freIndex);
-   }
+   printf("BGM_START: GAME START!\r\n");
+   BGM_START();
+
+   printf("BGM_GAME1: 미로 GAME START!\r\n");
+   BGM_GAME1();
+
+   printf("BGM_GAME2: 같은 그림 찾기 GAME START!\r\n");
+   BGM_GAME2();
+
+   printf("buzzer off\r\n");
+   buzzerExit();
    return 0;
 }
