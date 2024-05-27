@@ -3,7 +3,8 @@
 int buzzerInit(void);
 int buzzerPlaySong(int scale);
 int buzzerStopSong(void);
-int findBuzzerSysPath(void);
-int BGM1(void);
-int BGM2(void);
+int buzzerExit(void);
+int BGM_STRAT(void);
+int BGM_GAME1(void);
+int BGM_GAME2(void);
 #endif
