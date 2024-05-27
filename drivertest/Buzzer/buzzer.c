@@ -38,7 +38,7 @@ int findBuzzerSysPath(){
    printf("find %s\n",gBuzzerBaseSysDir);
 
    return ifNotFound;
-}
+}//버저 경로 찾기
 
 void doHelp(void)
 {
