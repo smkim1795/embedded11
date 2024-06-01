@@ -46,11 +46,11 @@ int lcdtextwrite(const char *str1, const char *str2, int lineFlag)
 	stTextLCD  stlcd; 
 	int len; 
 	
-	memset(&stlcd,0,sizeof(stTextLCD));  // 구조체 초기화
+	memset(&stlcd,0,sizeof(stTextLCD));  //구조체 초기화
 	linenum = lineFlag;
 	printf("linenum :%d\n", linenum);
 	
-	if ( linenum == 1)
+	if ( linenum == 1) //첫번째 line
 	{
 		stlcd.cmdData = CMD_DATA_WRITE_LINE_1;
 		printf("string:%s\n",str1);
@@ -65,7 +65,7 @@ int lcdtextwrite(const char *str1, const char *str2, int lineFlag)
 		}
 	}
 
-	else if ( linenum == 2) // second line
+	else if ( linenum == 2) //두번째 line
 	{
 		stlcd.cmdData = CMD_DATA_WRITE_LINE_2;
 		printf("string:%s\n",str2);
