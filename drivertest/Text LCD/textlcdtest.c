@@ -15,13 +15,21 @@
 int main(void)
 {
     textlcdInit();
-    lcdtextwrite("  ", "  ", 1);
+    lcdtextwrite("  Which game do ", "    you want?    ", 1);
     sleep(1);
-    lcdtextwrite("  ", "  ", 2);
+    lcdtextwrite("  Which game do ", "    you want?    ", 2);
     sleep(3);
     textlcdclear();
     sleep(1);
-    lcdtextwrite("  ", NULL, 1);
+    lcdtextwrite("    Complete    ", NULL, 1);
+    sleep(3);
+    textlcdclear();
+    sleep(1);
+    lcdtextwrite("     Fail...    ", NULL, 1);
+    sleep(3);
+    textlcdclear();
+    sleep(1);
+    lcdtextwrite("Correct Answer: ", NULL, 1);
     sleep(1);
     textlcdExit();
     return 0;
