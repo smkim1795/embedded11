@@ -11,37 +11,43 @@
 #include <linux/spi/spidev.h>
 #include "temperature.h"
 
-int main( int argc,  char **argv){ 
-	
-		char *buffer; int file;
-		file=spi_init("/dev/spidev1.0"); 		//dev
-		buffer=(char *)spi_read_lm74(file); 
-		close(file);
-		
-		int value = 0; 											//13비트 Big Endian Signed Int를 16비트 Little Endian Signed Int로 바꾼다
-		value = (buffer[1] >> 3); 							
+#define TEMP_THRESHOLD_HIGH 100  // 고온 임계값 설정
+#define TEMP_THRESHOLD_LOW -50   // 저온 임계값 설정
 
-           //Last 3bit: Trashes 날려버리는 함수: 남은 5비트만 value에 더해짐
-		
+int main(int argc, char **argv) { 
+    char *buffer; 
+    int file;
 
-                   value += (buffer[0]) << 5; 						
+    file = spi_init("/dev/spidev1.0");  // SPI 초기화
+    if (file < 0) {
+        perror("SPI 초기화 실패");
+        return 1;
+    }
 
-           //위에서 5비트 더한거에 상위 8비트 (= 13비트) 를 원하는 값으로 채움
-		
+    buffer = (char *)spi_read_lm74(file);  // 온도 센서에서 데이터 읽기
+    if (!buffer) {
+        perror("SPI 장치에서 읽기 실패");
+        close(file);
+        return 1;
+    }
+    close(file);
 
-                   if ( buffer[0]&0x80 )
+    int value = 0;  // 13비트 빅 엔디안 싸인드 인트를 16비트 리틀 엔디안 싸인드 인트로 변환
+    value = (buffer[1] >> 3);  // 마지막 3비트 버리기
+    value += (buffer[0]) << 5;  // 상위 8비트를 값에 추가
 
- 								
-           //만약 buffer[0]의 최상위 8번째 비트가 1이라면 사실은 음수 = 영하 기온이 디텍팅 된 것
-		{																	//그럼 value의 32번 비트에서부터 14번 비트까지 1로 채워 줘야 함 (2의 보수, 음수 참고)
-				int i=0;
-				for (i=31;i > 12; i--)
-				value |= (1<<i);									 //1로 비트를 채움
-		}
-																			//다 바꿈
-		
-		double temp = (double)value*0.0625; 
-																			//1비트가 0.0625도
-		printf("Current Temp: %lf \n", temp);
-		return 0;
+    if (buffer[0] & 0x80) {  // buffer[0]의 MSB가 1이면 음수값임
+        for (int i = 31; i > 12; i--) {
+            value |= (1 << i);  // 2의 보수를 위해 비트를 1로 설정
+        }
+    }
+
+    double temp = (double)value * 0.0625;  // 각 비트가 0.0625도를 나타냄
+
+    if (temp > TEMP_THRESHOLD_HIGH || temp < TEMP_THRESHOLD_LOW) {
+        printf("온도 이상 감지됨\n");
+    }
+
+    free(buffer);
+    return 0;
 }
