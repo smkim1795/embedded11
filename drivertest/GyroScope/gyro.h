@@ -1,6 +1,8 @@
 #ifndef _GYRO_H_
 #define _GYRO_H_
 
-int gyro_options();
+void getAccel(int accel[]);
+void getMagnet(int magnet[]);
+void getGyro(int gyro[]);
 
 #endif
