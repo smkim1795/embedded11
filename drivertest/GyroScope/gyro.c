@@ -2,52 +2,44 @@
 #include <stdlib.h>
 #include <fcntl.h>
 #include <unistd.h>
-#include "gyro.h"
 
-#define ACCEL_THRESHOLD 5000
-#define ACCEL_Z_THRESHOLD 9000
-#define accel_t 500000
+#define ACCELPATH "/sys/class/misc/FreescaleAccelerometer/"
+#define MAGNEPATH "/sys/class/misc/FreescaleMagnetometer/"
+#define GYROPATH "/sys/class/misc/FreescaleGyroscope/"
 
-int main(void) {
-    int first_accel[3];
-    int second_accel[3];
+int fd = 0;
+FILE *fp = NULL;
 
-    printf("Move Player");
-    getAccel(first_accel);
+//Accelerometer
+void getAccel(int accel[]){
+    // Accelerometer
+    fd = open(ACCELPATH "enable", O_WRONLY);
+    dprintf(fd, "1");
+    close(fd);
 
-    while (1) {
-        getAccel(second_accel);
+    fp = fopen(ACCELPATH "data", "rt");
+    fscanf(fp, "%d, %d, %d", &accel[0], &accel[1], &accel[2]);
+    fclose(fp);
+}
 
-        if (first_accel[0] - second_accel[0] > ACCEL_THRESHOLD)
-        {
-            printf("Moving Right\n");
-        }
-        else if (second_accel[0] - first_accel[0] > ACCEL_THRESHOLD)
-        {
-            printf("Moving Left\n");
-        }
-        else if (first_accel[2] - second_accel[2] > ACCEL_Z_THRESHOLD)
-        {
-            printf("Moving Backward\n");
-        }
-        else if (second_accel[2] - first_accel[2] > ACCEL_THRESHOLD)
-        {
-            if (second_accel[2] - first_accel[2] < ACCEL_Z_THRESHOLD)
-            {
-                printf("Moving Forward\n");
-            }
-            else
-            {
-                printf("Accelerating Forward\n");
-            }
-        }
-        else
-        {
-            printf("Stable\n");
-        }
+    //Magnetometer
+void getMagnet(int magnet[]){
+    fd = open(MAGNEPATH "enable", O_WRONLY);
+    dprintf(fd, "1");
+    close(fd);
 
-        usleep(accel_t); // wait for the next measurement
-    }
+    fp = fopen(MAGNEPATH "data", "rt");
+    fscanf(fp, "%d, %d, %d", &magnet[0], &magnet[1], &magnet[2]);
+    fclose(fp);
+}
 
-    return 0;
+     //Gyroscope
+   void getGyro(int gyro[]){
+    fd = open(GYROPATH "enable", O_WRONLY);
+    dprintf(fd, "1");a
+    close(fd);
+
+    fp = fopen(GYROPATH "data", "rt");
+    fscanf(fp, "%d, %d, %d", &gyro[0], &gyro[1], &gyro[2]);
+    fclose(fp);
 }
