@@ -36,7 +36,7 @@ void getMagnet(int magnet[]){
      //Gyroscope
    void getGyro(int gyro[]){
     fd = open(GYROPATH "enable", O_WRONLY);
-    dprintf(fd, "1");a
+    dprintf(fd, "1");
     close(fd);
 
     fp = fopen(GYROPATH "data", "rt");
