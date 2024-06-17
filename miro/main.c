@@ -87,54 +87,75 @@ int main(void){
 
 
            if((new_x >= 130 && new_x <= 390) && (new_y == 370)){
-                read_bmp("fail.bmp", &data, &cols, &rows);    
+                read_bmp("fail.bmp", &data, &cols, &rows);
+                fb_write(data, cols,rows);   
+                sleep(2);
                 break;                                                           
             }//1번선
             else if((new_y >= 450 && new_y <= 510) && (new_x ==  270)){
-                read_bmp("fail.bmp", &data, &cols, &rows);    
+                read_bmp("fail.bmp", &data, &cols, &rows);
+                fb_write(data, cols,rows); 
+                sleep(2);   
                 break;
             }//2번선
             else if((new_y >= 450 && new_y <= 510) && (new_x == 400)){
-                read_bmp("fail.bmp", &data, &cols, &rows);    
+                read_bmp("fail.bmp", &data, &cols, &rows);
+                fb_write(data, cols,rows);    
+                sleep(2);
                 break;
             }//3번선
             else if((new_x >= 400 && new_x <= 670) && (new_y == 450)){
-                read_bmp("fail.bmp", &data, &cols, &rows);    
+                read_bmp("fail.bmp", &data, &cols, &rows);
+                fb_write(data, cols,rows); 
+                sleep(2);   
                 break;
             }//4번선
             else if((new_x >= 550 && new_x <= 670) && (new_y == 370)){
-                read_bmp("fail.bmp", &data, &cols, &rows);    
+                read_bmp("fail.bmp", &data, &cols, &rows);
+                fb_write(data, cols,rows);    
+                sleep(2);
                 break;
             }//5번선
 
             else if((new_y >= 220 && new_y <= 430) && (new_x == 810)){
-                read_bmp("fail.bmp", &data, &cols, &rows);    
+                read_bmp("fail.bmp", &data, &cols, &rows);
+                fb_write(data, cols,rows);    
+                sleep(2);
                 break;
             }//6번선
 
             else if((new_y >= 220 && new_y <= 270) && (new_x == 700)){
-                read_bmp("fail.bmp", &data, &cols, &rows);    
+                read_bmp("fail.bmp", &data, &cols, &rows);
+                fb_write(data, cols,rows);  
+                sleep(2);
                 break;
             }//7번선
 
             else if((new_x >= 550 && new_x <= 810) && (new_y == 150)){
-                read_bmp("fail.bmp", &data, &cols, &rows);    
+                read_bmp("fail.bmp", &data, &cols, &rows);
+                fb_write(data, cols,rows);   
+                sleep(2);
                 break;
             }//8번선
 
             else if((new_x >= 270 && new_x <= 670) && (new_y == 190)){
-                read_bmp("fail.bmp", &data, &cols, &rows);    
+                read_bmp("fail.bmp", &data, &cols, &rows);
+                fb_write(data, cols,rows);    
+                sleep(2);
                 break;
             }//9번선
 
             else if((new_y >= 70 && new_y <= 190) && (new_x == 270)){
-                read_bmp("fail.bmp", &data, &cols, &rows);    
+                read_bmp("fail.bmp", &data, &cols, &rows); 
+                fb_write(data, cols,rows);
+                sleep(2);  
                 break;
             }//10번선
 
             else if((new_y >= 70 && new_y <= 110) && new_x == 370){
                 read_bmp("fail.bmp", &data, &cols, &rows);
- sleep(2);   
+                fb_write(data, cols,rows);
+                sleep(2);   
                 break;
             }//11번선
  
