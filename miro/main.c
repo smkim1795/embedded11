@@ -52,7 +52,7 @@ void *thread_object_0(){                 // 스레드 0, FND를 활용한 타이
                 fb_write(data, cols,rows);
                 sleep(2);
                 fb_close();
-                }
+                  }
     }
 
 
@@ -205,7 +205,7 @@ int main(void){
                 break;
             }//11번선
  
-            else if((new_x >= 280 && new_x <= 330) && new_y == 90){
+            else if((new_x >= 260 && new_x <= 360) && new_y == 90){
                read_bmp("clear.bmp", &data, &cols, &rows);
                fb_write(data, cols, rows);
                printf("도착점에 도달하였습니다.\n");
