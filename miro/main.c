@@ -9,20 +9,52 @@
 #include <sys/msg.h>
 #include <pthread.h>
 
+#include "fnd.h"
 #include "libBitmap.h"
 #include "bitmapFileHeader.h"
 #include "gyro.h"
 
+#define MODE_COUNT_DIS '1'
 #define MODE_STATIC_DIS      0
+static int timer_end=0;
 static int mode;
+static int t;
+static int fail = 0;
+static int finish = 0;
+//static int step = 0;
+static int loop_break;
 //static int t;
 static char *data;
 static int cols = 0, rows = 0;
+static int miro = 0;
 
 static int new_x = 310;
 static int new_y = 510;
 static int accel_x= 0;
 static int accel_y = 0;
+
+pthread_t thread[1];                        // fnd 활용 위한 스레드
+
+void *thread_object_0(){                 // 스레드 0, FND를 활용한 타이머 생성
+        while(timer_end != 1){
+            for(t=20; t>=0; t--){               // 20초 타이머 생성
+            mode=MODE_STATIC_DIS;
+            fndDisp(t,mode);
+            sleep (1);
+            }
+            timer_end=1;
+            break;
+        }
+
+        if(timer_end == 1 && fail == 0 && finish == 0){         // 실패하지 않았지만 시간내에 성공하지 못했으면
+                printf("game over.. !!! \n\n");                                         // 그래도 게임 오버
+                read_bmp("fail.bmp", &data, &cols, &rows);      
+                fb_write(data, cols,rows);
+                sleep(2);
+                fb_close();
+                }
+    }
+
 
 
 int main(void){
@@ -31,6 +63,7 @@ int main(void){
     int bits_per_pixel;
     int line_length;
 
+    fndDisp(000000,0); //fnd 초기화
     if ( fb_init(&screen_width, &screen_height, &bits_per_pixel, &line_length) < 0 )
     {
       printf ("FrameBuffer Init Failed\r\n");                                           // TFT LCD 초기화
@@ -47,9 +80,11 @@ int main(void){
         {
             printf ("FrameBuffer Init Failed\r\n");                   // TFT LCD 초기화
         }
+        fndDisp(000000,0);
 
         read_bmp("miro.bmp", &data, &cols, &rows);                        // 미로 배경
         fb_write(data, cols,rows);
+        pthread_create(&thread[0],NULL,thread_object_0,NULL); //fnd 20초 카운트 시작
                 
         while(1)
         {  
@@ -90,30 +125,35 @@ int main(void){
                 read_bmp("fail.bmp", &data, &cols, &rows);
                 fb_write(data, cols,rows);   
                 sleep(2);
+				fail = 1;
                 break;                                                           
             }//1번선
             else if((new_y >= 450 && new_y <= 510) && (new_x ==  270)){
                 read_bmp("fail.bmp", &data, &cols, &rows);
                 fb_write(data, cols,rows); 
-                sleep(2);   
+                sleep(2);
+				fail = 1;   
                 break;
             }//2번선
             else if((new_y >= 450 && new_y <= 510) && (new_x == 400)){
                 read_bmp("fail.bmp", &data, &cols, &rows);
                 fb_write(data, cols,rows);    
                 sleep(2);
+				fail = 1;
                 break;
             }//3번선
             else if((new_x >= 400 && new_x <= 670) && (new_y == 450)){
                 read_bmp("fail.bmp", &data, &cols, &rows);
                 fb_write(data, cols,rows); 
-                sleep(2);   
+                sleep(2);
+				fail = 1;   
                 break;
             }//4번선
             else if((new_x >= 550 && new_x <= 670) && (new_y == 370)){
                 read_bmp("fail.bmp", &data, &cols, &rows);
                 fb_write(data, cols,rows);    
                 sleep(2);
+				fail = 1;
                 break;
             }//5번선
 
@@ -121,6 +161,7 @@ int main(void){
                 read_bmp("fail.bmp", &data, &cols, &rows);
                 fb_write(data, cols,rows);    
                 sleep(2);
+				fail = 1;
                 break;
             }//6번선
 
@@ -128,6 +169,7 @@ int main(void){
                 read_bmp("fail.bmp", &data, &cols, &rows);
                 fb_write(data, cols,rows);  
                 sleep(2);
+				fail = 1;
                 break;
             }//7번선
 
@@ -135,6 +177,7 @@ int main(void){
                 read_bmp("fail.bmp", &data, &cols, &rows);
                 fb_write(data, cols,rows);   
                 sleep(2);
+				fail = 1;
                 break;
             }//8번선
 
@@ -142,20 +185,23 @@ int main(void){
                 read_bmp("fail.bmp", &data, &cols, &rows);
                 fb_write(data, cols,rows);    
                 sleep(2);
+				fail = 1;
                 break;
             }//9번선
 
             else if((new_y >= 70 && new_y <= 190) && (new_x == 270)){
                 read_bmp("fail.bmp", &data, &cols, &rows); 
                 fb_write(data, cols,rows);
-                sleep(2);  
+                sleep(2);
+				fail = 1;  
                 break;
             }//10번선
 
             else if((new_y >= 70 && new_y <= 110) && new_x == 370){
                 read_bmp("fail.bmp", &data, &cols, &rows);
                 fb_write(data, cols,rows);
-                sleep(2);   
+                sleep(2);
+				fail = 1;   
                 break;
             }//11번선
  
@@ -169,10 +215,11 @@ int main(void){
             else{   
                 printf("ok\n");     
                   }
+            timer_end = 1;
             usleep(125000); 
         }
 
-
+pthread_join(thread[0], NULL);
 
     fb_close();                                         // 프로그램 종료하면서 각 기능들 또한 종료시켜준다.
 
