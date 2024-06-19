@@ -1,34 +1,18 @@
 #include <stdio.h>
-
 #include <stdlib.h>
-
 #include <string.h>
-
 #include <linux/input.h>
-
 #include <unistd.h> // for open/close
-
 #include <fcntl.h> // for O_RDWR
-
 #include <sys/ioctl.h> // for ioctl
-
 #include <sys/types.h>
-
 #include <sys/msg.h>
-
 #include <pthread.h>
 
-
-
 #include "fnd.h"
-
 #include "libBitmap.h"
-
 #include "bitmapFileHeader.h"
-
 #include "gyro.h"
-
-
 
 #define MODE_COUNT_DIS '1'
 
