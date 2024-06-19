@@ -19,21 +19,16 @@
 #include "gyro.h"
 #include "buzzer.h"
 
-//#define MODE_COUNT_DIS '1'
 #define MODE_STATIC_DIS 0
 static int msgID;
-//BUTTON_MSG_T rcv;
-
 static int timer_end = 0; //제한시간 flag
 static int mode;
 static int t;
 static int fail = 0;
-//static int stage1_end = 0;
 static int stage = 0; 
 static int stage1_end = 0;
 static char *data;
 static int cols = 0, rows = 0;
-//static int stage_2 = 0; //같은그림찾기게임 flag
 static int stage2_end = 0;
 
 static int led_on = 0;
@@ -65,12 +60,6 @@ void *thread_object_0()
                     mode = MODE_STATIC_DIS;
                     fndDisp(t, mode);
                     sleep(1);
-                    // 타이머가 끝나거나 실패 flag가 뜨면 루프 종료
-                    // if (timer_end == 1 || fail == 1)
-                    // {
-                    //     // system("sudo pkill -9 aplay");
-                    //     break;
-                    // }
                     if (fail == 1)
                         break;
                 }
@@ -79,6 +68,7 @@ void *thread_object_0()
             }
             if (stage1_end == 1)
             {
+                lcdtextwrite("    Ya Hohoho    ", NULL, 1);
                 for (int i = 0; i < 8; i++) //성공 시 led 8개 ON
                 {
                     ledOnOff(i, 1);
@@ -98,19 +88,20 @@ void *thread_object_0()
                 {
                     ledOnOff(i, 0);
                 }
+                textlcdclear();
                 return NULL;
             }
             if ((timer_end == 1 || fail == 1) && stage1_end == 0)
             { // 시간내에 성공하지 못했거나 벽에 닿으면 게임오버
                 lcdtextwrite("     Fail...    ", NULL, 1);
                 sleep(3);
+                textlcdclear();
                 // 미로게임+타이머 처음부터 다시 시작
                 stage = 1;
                 fail = 0; //실패 flag 초기화
             }
         }
     }
-    //return NULL;
 }
 
 void *thread_object_1()
@@ -128,13 +119,12 @@ void *thread_object_1()
             read_bmp("miro.bmp", &data, &cols, &rows); // 미로 배경
             fb_write(data, cols, rows);
             stage1_end = 0;
-            //stage1_end = 0;
             new_x = 310;
             new_y = 510; // 시작 지점 초기화
 
             while (stage1_end == 0)
             {
-                read_bmp("player.bmp", &data, &cols, &rows); // 미로 게임에서 사용되는 선 긋는 용 bmp 출력
+                read_bmp("player.bmp", &data, &cols, &rows); // 미로 게임에서 사용되는  player.bmp 출력
                 fb_write_c(data, cols, rows, new_x, new_y);
 
                 accel_x = get_accel_x(); // 가속도 센서 값 불러옴
@@ -142,7 +132,7 @@ void *thread_object_1()
                 printf("\n");
 
                 if (accel_x >= 4000)
-                {                                // !! 사용자가 키트를 쥐고 TFT LCD를 바라보는 시점에서의
+                {                                // 사용자가 키트를 쥐고 TFT LCD를 바라보는 시점에서
                     printf("a : %d\n", accel_x); // x축 = new_y ::: y축 = new_x
                     new_y = new_y + 10;
                 }
@@ -151,8 +141,8 @@ void *thread_object_1()
                     printf("a : %d\n", accel_x);
                     new_y = new_y - 10;
                 }
-                else if (accel_y >= 4000)
-                { // 사용자가 키트를 기울이는 방향대로 aim이 이동
+                else if (accel_y >= 4000)// 사용자가 키트를 기울이는 방향대로 player 이동
+                { 
                     printf("b : %d\n", accel_y);
                     new_x = new_x + 10;
                 }
@@ -162,9 +152,9 @@ void *thread_object_1()
                     new_x = new_x - 10;
                 }
 
-                read_bmp("player.bmp", &data, &cols, &rows); // 이동하는 aim의 새로운 좌표를 업데이트하여 다시 출력
+                read_bmp("player.bmp", &data, &cols, &rows); // 이동하는 player의 새로운 좌표를 업데이트하여 다시 출력
                 fb_write_c(data, cols, rows, new_x, new_y);
-                printf("x: %d       y: %d\n\n", new_y, new_x); // aim의 실시간 좌표 확인
+                printf("x: %d       y: %d\n\n", new_y, new_x); // player의 실시간 좌표 확인
 
                 if ((new_x >= 130 && new_x <= 390) && (new_y == 370))
                 {
@@ -260,24 +250,17 @@ void *thread_object_1()
                     stage1_end = 1;
                     return NULL;
                     break;
-                } //성공 지점 도달
-
+                } //성공 지점 도달;
                 else
                 {
                     printf("ok\n"); //이동중인 상태
                 }
                 usleep(125000);
-
-                // if (stage1_end == 1)
-                // {
-
-                //     //exit(0); //성공 시 게임 종료
-                // }
             }
         }
-        //return NULL;
     }
 }
+
 void show_problem(const char *correct_bmp, const char *select_bmp)
 {
     // 문제 표시
@@ -322,18 +305,15 @@ void show_problem(const char *correct_bmp, const char *select_bmp)
         pwmSetPercent(100, 2);  //빨강
     }
     fb_write(data, cols, rows);
-    //usleep(1000000); // 1초 대기
     sleep(1); // 1초 대기
 }
 
 int main(void)
 {
-    //buttonInit();
     pwmLedInit();
     ledLibInit();
     textlcdInit();
     buzzerInit();
-    //ledalloff();                                                      // 각 기능들 활용을 위한 초기 설정
 
     fndDisp(000000, 0); // 게임 시작 시 FND 0으로 초기화
 
@@ -370,12 +350,13 @@ int main(void)
         ;
     printf("while end!\r\n");
     /////////<같은 그림 찾기 게임>/////////
-
+    
     if (fb_init(&screen_width, &screen_height, &bits_per_pixel, &line_length) < 0)
     {
         printf("FrameBuffer Init Failed\r\n"); // TFT LCD 초기화
     }
     fndDisp(000000, 0);
+
 
     printf("FIND SAME GAME START!\r\n");
     BGM_START();
@@ -383,7 +364,6 @@ int main(void)
     // 게임 시작 화면 출력
     read_bmp("start.bmp", &data, &cols, &rows);
     fb_write(data, cols, rows);
-    //usleep(3000000); // 3초 대기
     usleep(3); // 3초 대기
 
     // 문제 1: correct1.bmp를 0.2초 동안 보여주고 select1.bmp 출력
@@ -395,8 +375,14 @@ int main(void)
     // 문제 3: correct3.bmp를 0.2초 동안 보여주고 select3.bmp 출력
     show_problem("correct3.bmp", "select3.bmp");
 
+    read_bmp("output.bmp", &data, &cols, &rows);
+    fb_write(data, cols, rows);
+
+    lcdtextwrite(" Embededsystem ", " finish... ", 1);
+    lcdtextwrite(" Embededsystem ", " finish... ", 2);
+    sleep(3);
+    textlcdclear();
     pwmInactiveAll();
-    //buttonExit();
     ledLibExit();
     textlcdExit();
     close_bmp();
