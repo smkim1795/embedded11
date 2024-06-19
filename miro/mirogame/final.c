@@ -19,7 +19,6 @@
 #define MODE_STATIC_DIS      0
 
 static int timer_end=0;
-
 static int mode;
 
 static int t;
