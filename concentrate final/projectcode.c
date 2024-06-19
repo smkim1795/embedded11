@@ -310,10 +310,16 @@ void show_problem(const char *correct_bmp, const char *select_bmp)
     if (button == correct_answer)
     {
         read_bmp("o.bmp", &data, &cols, &rows);
+        pwmSetPercent(0, 0);
+        pwmSetPercent(100, 1);
+        pwmSetPercent(0, 2); //초록
     }
     else
     {
         read_bmp("x.bmp", &data, &cols, &rows);
+        pwmSetPercent(0, 0);
+        pwmSetPercent(0, 1);
+        pwmSetPercent(100, 2);  //빨강
     }
     fb_write(data, cols, rows);
     //usleep(1000000); // 1초 대기
