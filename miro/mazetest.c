@@ -8,6 +8,7 @@
 #include <sys/types.h>
 #include <sys/msg.h>
 #include <pthread.h>
+#include <dirent.h>
 
 //#include "button.h"
 #include "fnd.h"
@@ -89,7 +90,7 @@ void* thread_object_0() {                 // 스레드 0 : FND를 활용한 미�
 
 void* thread_object_1() {                 // 스레드 1 : 미로 게임 bgm 재생
 
-    while(stage_1 == 1 && timer_end != 0 && fail == 0) {  //미로게임을 플레이중일때만
+    while(stage_1 == 1 && timer_end != 0 && fail =! 1) {  //미로게임을 플레이중일때만
 
         system("sudo aplay ./mazebgm.wav");  //bgm 재생
     
