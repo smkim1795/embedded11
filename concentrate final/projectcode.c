@@ -78,7 +78,28 @@ void *thread_object_0()
                 break;
             }
             if (stage1_end == 1)
+            {
+                for (int i = 0; i < 8; i++) //성공 시 led 8개 ON
+                {
+                    ledOnOff(i, 1);
+                }
+                sleep(1);
+                for (int i = 0; i < 8; i++) //led 8개 OFF
+                {
+                    ledOnOff(i, 0);
+                }
+                sleep(1);                   // 2초간 output을 보여준 후 프로그램 종료
+                for (int i = 0; i < 8; i++) //성공 시 led 8개 ON
+                {
+                    ledOnOff(i, 1);
+                }
+                sleep(1);
+                for (int i = 0; i < 8; i++) //led 8개 OFF
+                {
+                    ledOnOff(i, 0);
+                }
                 return NULL;
+            }
             if ((timer_end == 1 || fail == 1) && stage1_end == 0)
             { // 시간내에 성공하지 못했거나 벽에 닿으면 게임오버
                 lcdtextwrite("     Fail...    ", NULL, 1);
