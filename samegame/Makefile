@@ -1,4 +1,3 @@
-
 CC = arm-linux-gnueabi-gcc
 CFLAGS = -lpthread
 

@@ -1,21 +1,19 @@
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
-#include <linux/input.h>
 #include <fcntl.h>
 #include <sys/ioctl.h>
-#include <sys/types.h>
+#include <linux/input.h>
 #include <pthread.h>
 #include <string.h>
 
 #include "libBitmap.h"
 #include "bitmapFileHeader.h"
 #include "gyro.h"
-#include "button.h"  // 버튼 관련 헤더 파일 추가
+#include "button.h"
+#include "fnd.h"  // FND 관련 헤더 파일 추가
 
 #define MODE_STATIC_DIS 0
-static int mode;
 static char *data;
 static int cols = 0, rows = 0;
 
@@ -29,28 +27,37 @@ void show_problem(const char* correct_bmp, const char* select_bmp) {
     read_bmp(select_bmp, &data, &cols, &rows);
     fb_write(data, cols, rows);
 
-    // 정답 결정
-    int correct_answer;
-    if (strcmp(correct_bmp, "correct1.bmp") == 0)
-        correct_answer = 2;  // 문제 1의 정답은 2
-    else if (strcmp(correct_bmp, "correct2.bmp") == 0)
-        correct_answer = 3;  // 문제 2의 정답은 3
-    else if (strcmp(correct_bmp, "correct3.bmp") == 0)
-        correct_answer = 1;  // 문제 3의 정답은 1
+    // 5초 동안 FND에 카운트 다운 표시
+    fndDisp(5, MODE_STATIC_DIS);  // 5초 카운트 다운 시작
 
-    // 사용자 입력 대기 (버튼 처리)
+    // 버튼 입력 대기 (5초 안에 버튼을 누르면 다음 문제로)
     int button = -1;
-    while (button != BUTTON_HOME && button != BUTTON_BACK && button != BUTTON_SEARCH) {
+    int time_left = 5;
+    while (time_left > 0) {
         button = get_button_press();  // 사용자 입력 버튼을 가져옴
-        usleep(100000);  // 0.1초마다 확인
+        if (button != -1) {
+            break;  // 버튼 입력이 감지되면 루프 종료
+        }
+        sleep(1);  // 1초씩 대기
+        time_left--;
     }
 
-    // 정답 확인 후 o.bmp 또는 x.bmp 출력
-    if (button == correct_answer) {
-        read_bmp("o.bmp", &data, &cols, &rows);
+    if (button != -1) {
+        printf("Button pressed: %d\n", button);
+        // 정답 확인 후 o.bmp 또는 x.bmp 출력
+        if ((strcmp(correct_bmp, "correct1.bmp") == 0 && button == 2) ||
+            (strcmp(correct_bmp, "correct2.bmp") == 0 && button == 3) ||
+            (strcmp(correct_bmp, "correct3.bmp") == 0 && button == 1)) {
+            read_bmp("o.bmp", &data, &cols, &rows);
+        } else {
+            read_bmp("x.bmp", &data, &cols, &rows);
+        }
     } else {
+        printf("Time's up!\n");
+        // 시간 초과 시 x.bmp 출력
         read_bmp("x.bmp", &data, &cols, &rows);
     }
+
     fb_write(data, cols, rows);
     usleep(1000000);  // 1초 대기
 }
@@ -64,6 +71,13 @@ int main(void) {
     // 프레임버퍼 초기화
     if (fb_init(&screen_width, &screen_height, &bits_per_pixel, &line_length) < 0) {
         fprintf(stderr, "Framebuffer initialization failed\n");
+        return 1;
+    }
+
+    // FND 초기화
+    if (!fndInit()) {
+        fprintf(stderr, "Failed to initialize FND\n");
+        fb_close();
         return 1;
     }
 
@@ -81,6 +95,7 @@ int main(void) {
     // 문제 3: correct3.bmp를 0.2초 동안 보여주고 select3.bmp 출력
     show_problem("correct3.bmp", "select3.bmp");
 
+    fndExit();  // FND 종료
     fb_close();  // 프레임버퍼 닫기
 
     return 0;
