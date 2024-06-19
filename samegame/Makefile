@@ -25,4 +25,3 @@ fnd.o: fnd.c fnd.h
 
 clean:
         rm -f *.o main
-:wq!:
