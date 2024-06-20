@@ -29,9 +29,6 @@ static int stage = 0;
 static int stage1_end = 0;
 static char *data;
 static int cols = 0, rows = 0;
-static int stage2_end = 0;
-
-static int led_on = 0;
 
 static int new_x = 310;
 static int new_y = 510;
