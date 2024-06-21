@@ -241,6 +241,94 @@ void *thread_object_1()
                     fail = 1;
                     break;
                 } //11번선
+                 
+                else if ((new_x >= 400 && new_x <= 970) && new_y == 510)
+                {
+                    read_bmp("fail.bmp", &data, &cols, &rows);
+                    sleep(2);
+                    fail = 1;
+                    break;
+                } //12번선
+
+                 else if ((new_y >= 70 && new_y <= 510) && new_x == 970)
+                {
+                    read_bmp("fail.bmp", &data, &cols, &rows);
+                    sleep(2);
+                    fail = 1;
+                    break;
+                } //13번선
+
+                 else if ((new_x >= 570 && new_x <= 940) && new_y == 80)
+                {
+                    read_bmp("fail.bmp", &data, &cols, &rows);
+                    sleep(2);
+                    fail = 1;
+                    break;
+                } //14번선
+
+                 else if ((new_y >= 70 && new_y <= 510) && new_x == 130)
+                {
+                    read_bmp("fail.bmp", &data, &cols, &rows);
+                    sleep(2);
+                    fail = 1;
+                    break;
+                } //15번선
+
+                 else if ((new_x >= 130 && new_x <= 270) && new_y == 70)
+                {
+                    read_bmp("fail.bmp", &data, &cols, &rows);
+                    sleep(2);
+                    fail = 1;
+                    break;
+                } //16번선
+
+                 else if ((new_x >= 130 && new_x <= 270) && new_y == 510)
+                {
+                    read_bmp("fail.bmp", &data, &cols, &rows);
+                    sleep(2);
+                    fail = 1;
+                    break;
+                } //형 1번선
+
+                 else if ((new_x >= 130 && new_x <= 530) && new_y == 260)
+                {
+                    read_bmp("fail.bmp", &data, &cols, &rows);
+                    sleep(2);
+                    fail = 1;
+                    break;
+                } //형 2번선
+
+                else if ((new_y >= 290 && new_y <= 340) && new_x == 570)
+                {
+                    read_bmp("fail.bmp", &data, &cols, &rows);
+                    sleep(2);
+                    fail = 1;
+                    break;
+                } //형 3번선
+
+                else if ((new_x >= 890 && new_x <= 940) && new_y == 190)
+                {
+                    read_bmp("fail.bmp", &data, &cols, &rows);
+                    sleep(2);
+                    fail = 1;
+                    break;
+                } //형 4번선
+
+                else if ((new_y >= 70 && new_y <= 120) && new_x == 520)
+                {
+                    read_bmp("fail.bmp", &data, &cols, &rows);
+                    sleep(2);
+                    fail = 1;
+                    break;
+                } //형 5번선
+
+                else if ((new_x >= 260 && new_x <= 360) && new_y == 570)
+                {
+                    read_bmp("fail.bmp", &data, &cols, &rows);
+                    sleep(2);
+                    fail = 1;
+                    break;
+                } //플레이어 뒤에 선
 
                 else if ((new_x >= 280 && new_x <= 330) && new_y == 90)
                 {
