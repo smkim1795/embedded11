@@ -9,6 +9,8 @@
 #include <sys/msg.h>
 #include <pthread.h>
 
+#include <sys/kd.h>
+
 #include "button.h"
 #include "fnd.h"
 #include "colorled.h"
@@ -29,6 +31,9 @@ static int stage = 0;
 static int stage1_end = 0;
 static char *data;
 static int cols = 0, rows = 0;
+static int stage2_end = 0;
+
+static int led_on = 0;
 
 static int new_x = 310;
 static int new_y = 510;
@@ -307,6 +312,9 @@ void show_problem(const char *correct_bmp, const char *select_bmp)
 
 int main(void)
 {
+    int conFD = open ("/dev/tty0", O_RDWR);
+    ioctl(conFD, KDSETMODE, KD_GRAPHICS);
+
     pwmLedInit();
     ledLibInit();
     textlcdInit();
@@ -319,7 +327,7 @@ int main(void)
         printf("FrameBuffer Init Failed\r\n"); // TFT LCD 초기화
     }
 
-    read_bmp("start.bmp", &data, &cols, &rows); // 게임 시작 초기 화면 :: STRAT PAGE
+    read_bmp("final_rule.bmp", &data, &cols, &rows); // 게임 시작 초기 화면 :: STRAT PAGE
     fb_write(data, cols, rows);
     system("sudo amixer sset 'Speaker' 70%");
     system("sudo aplay ./startbgm.wav");
@@ -375,14 +383,17 @@ int main(void)
     read_bmp("output.bmp", &data, &cols, &rows);
     fb_write(data, cols, rows);
 
-    lcdtextwrite(" Embededsystem ", " finish... ", 1);
-    lcdtextwrite(" Embededsystem ", " finish... ", 2);
+    lcdtextwrite(" Embeddedsystem ", " finish... ", 1);
+    lcdtextwrite(" Embeddedsystem ", " finish... ", 2);
     sleep(3);
     textlcdclear();
     pwmInactiveAll();
     ledLibExit();
     textlcdExit();
     close_bmp();
+    
+    close(conFD);
+
     fb_close(); // 프로그램 & 각 기능들 종료
 
     return 0;
