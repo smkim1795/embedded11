@@ -54,6 +54,21 @@ void *thread_object_0()
         {                  //미로 게임일 경우
             timer_end = 0; //타이머 초기화
             fail = 0;      //실패 조건 초기화
+            
+            stage1_end = 0;
+            cols = 0;
+            rows = 0;
+            new_x = 310;
+            new_y = 510; // 시작 지점 초기화
+
+            if (fb_init(&screen_width, &screen_height, &bits_per_pixel, &line_length) < 0)
+            {
+                printf("FrameBuffer Init Failed\r\n"); // TFT LCD 초기화
+            }
+            fndDisp(000000, 0);
+
+            read_bmp("miro.bmp", &data, &cols, &rows); // 미로 배경
+            fb_write(data, cols, rows);
 
             while (timer_end == 0 && fail == 0)
             {
@@ -112,6 +127,12 @@ void *thread_object_1()
     {
         if (stage == 1)
         {
+            stage1_end = 0;
+            cols = 0;
+            rows = 0;
+            new_x = 310;
+            new_y = 510; // 시작 지점 초기화
+
             if (fb_init(&screen_width, &screen_height, &bits_per_pixel, &line_length) < 0)
             {
                 printf("FrameBuffer Init Failed\r\n"); // TFT LCD 초기화
@@ -120,10 +141,7 @@ void *thread_object_1()
 
             read_bmp("miro.bmp", &data, &cols, &rows); // 미로 배경
             fb_write(data, cols, rows);
-            stage1_end = 0;
-            new_x = 310;
-            new_y = 510; // 시작 지점 초기화
-
+            
             while (stage1_end == 0)
             {
                 read_bmp("player.bmp", &data, &cols, &rows); // 미로 게임에서 사용되는  player.bmp 출력
@@ -241,7 +259,7 @@ void *thread_object_1()
                     fail = 1;
                     break;
                 } //11번선
-                 
+
                 else if ((new_x >= 400 && new_x <= 970) && new_y == 510)
                 {
                     read_bmp("fail.bmp", &data, &cols, &rows);
@@ -421,16 +439,9 @@ int main(void)
     system("sudo aplay ./startbgm.wav");
 
     ///////// < 미로 게임 > /////////
-    if (fb_init(&screen_width, &screen_height, &bits_per_pixel, &line_length) < 0)
-    {
-        printf("FrameBuffer Init Failed\r\n"); // TFT LCD 초기화
-    }
-    fndDisp(000000, 0);
 
-    read_bmp("miro.bmp", &data, &cols, &rows); // 미로 배경
-    fb_write(data, cols, rows);
 
-    stage = 1; //미로게임 시작
+    stage = 1; //미로게임
 
     pthread_create(&thread[0], NULL, thread_object_0, NULL); // 미로게임 타이머 스레드 생성
     pthread_create(&thread[1], NULL, thread_object_1, NULL); // 미로게임 스레드 생성
@@ -479,10 +490,9 @@ int main(void)
     ledLibExit();
     textlcdExit();
     close_bmp();
-    
-    close(conFD);
-
     fb_close(); // 프로그램 & 각 기능들 종료
+
+    close(conFD);
 
     return 0;
 }
