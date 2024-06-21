@@ -419,7 +419,7 @@ void show_problem(const char *correct_bmp, const char *select_bmp)
 int main(void)
 {
     int conFD = open ("/dev/tty0", O_RDWR);
-    ioctl(conFD, KDSETMODE, KD_GRAPHICS);
+    ioctl(conFD, KDSETMODE, KD_GRAPHICS);  //커서 없애기
 
     pwmLedInit();
     ledLibInit();
@@ -447,10 +447,10 @@ int main(void)
     pthread_create(&thread[1], NULL, thread_object_1, NULL); // 미로게임 스레드 생성
 
     pthread_join(thread[0], NULL);
-    pthread_join(thread[1], NULL);
+    pthread_join(thread[1], NULL);  //스레드 종료 대기
 
     printf("while start!\r\n");
-    while (!stage1_end)
+    while (!stage1_end)     //end flag가 떠도 main문에 묶일 수 있도록 하는 while문
         ;
     printf("while end!\r\n");
     /////////<같은 그림 찾기 게임>/////////
@@ -463,10 +463,10 @@ int main(void)
 
 
     printf("FIND SAME GAME START!\r\n");
-    BGM_START();
+    BGM_START(); //buzzer
 
     // 게임 시작 화면 출력
-    read_bmp("start.bmp", &data, &cols, &rows);
+    read_bmp("start.bmp", &data, &cols, &rows);  // 안나옴 빼도될듯
     fb_write(data, cols, rows);
     usleep(3); // 3초 대기
 
@@ -479,7 +479,7 @@ int main(void)
     // 문제 3: correct3.bmp를 0.2초 동안 보여주고 select3.bmp 출력
     show_problem("correct3.bmp", "select3.bmp");
 
-    read_bmp("output.bmp", &data, &cols, &rows);
+    read_bmp("output.bmp", &data, &cols, &rows);  //황희찬 사진
     fb_write(data, cols, rows);
 
     lcdtextwrite(" Embeddedsystem ", " finish... ", 1);
@@ -490,7 +490,7 @@ int main(void)
     ledLibExit();
     textlcdExit();
     close_bmp();
-    fb_close(); // 프로그램 & 각 기능들 종료
+    fb_close(); // 프로그램 & 각 기능들 종료 (TFTLCD는 안꺼짐)
 
     close(conFD);
 
